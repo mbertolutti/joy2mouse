@@ -13,6 +13,7 @@
 #include <cstdio>
 
 #include "xbox360_controller.hpp"
+#include "vec.hpp"
 
 const char* joystick_interface = "/dev/input/js0";
 
