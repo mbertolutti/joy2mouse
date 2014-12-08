@@ -15,6 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 set(CMAKE_joy2mouse_SRC
     main.cpp
+    xbox360_controller.cpp
 )
 
 add_executable(joy2mouse ${CMAKE_joy2mouse_SRC})
