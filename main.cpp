@@ -62,6 +62,22 @@ std::string to_string(button button)
     return "Unknown";
 }
 
+std::string to_string(axis axis)
+{
+    switch (axis)
+    {
+        case axis::left_stick_x: return "Left Stick X";
+        case axis::left_stick_y: return "Left Stick Y";
+        case axis::left_trigger: return "Left Trigger";
+        case axis::right_stick_x: return "Right Stick X";
+        case axis::right_stick_y: return "Right Stick Y";
+        case axis::right_trigger: return "Right Trigger";
+        case axis::dpad_x: return "D-Pad X";
+        case axis::dpad_y: return "D-Pad Y";
+    }
+    return "Unknown";
+}
+
 } // namespace xbox360_controller
 
 int main()
@@ -99,10 +115,10 @@ int main()
         } break;
         case JS_EVENT_AXIS:
         {
-            unsigned axis = ev.number;
+            auto axis = static_cast<xbox360_controller::axis>(ev.number);
             double value = ev.value / 32767.0;
             std::cout << boost::str(boost::format("Axis %1%: %2%\n")
-                    % axis % value);
+                    % to_string(axis) % value);
         } break;
         }
     }
