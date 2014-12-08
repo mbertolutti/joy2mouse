@@ -14,7 +14,9 @@
 
 const char* joystick_interface = "/dev/input/js0";
 
-enum class xbox360_controller_button
+namespace xbox360_controller {
+
+enum class button
 {
     face_a,
     face_b,
@@ -29,24 +31,38 @@ enum class xbox360_controller_button
     right_stick
 };
 
-std::string to_string(xbox360_controller_button button)
+enum class axis
+{
+    left_stick_x,
+    left_stick_y,
+    left_trigger,
+    right_stick_x,
+    right_stick_y,
+    right_trigger,
+    dpad_x,
+    dpad_y
+};
+
+std::string to_string(button button)
 {
     switch (button)
     {
-        case xbox360_controller_button::face_a: return "Face A";
-        case xbox360_controller_button::face_b: return "Face B";
-        case xbox360_controller_button::face_x: return "Face X";
-        case xbox360_controller_button::face_y: return "Face Y";
-        case xbox360_controller_button::left_bumper: return "Left Bumper";
-        case xbox360_controller_button::right_bumper: return "Right Bumper";
-        case xbox360_controller_button::back: return "Back";
-        case xbox360_controller_button::start: return "Start";
-        case xbox360_controller_button::guide: return "Guide";
-        case xbox360_controller_button::left_stick: return "Left Stick";
-        case xbox360_controller_button::right_stick: return "Right Stick";
+        case button::face_a: return "Face A";
+        case button::face_b: return "Face B";
+        case button::face_x: return "Face X";
+        case button::face_y: return "Face Y";
+        case button::left_bumper: return "Left Bumper";
+        case button::right_bumper: return "Right Bumper";
+        case button::back: return "Back";
+        case button::start: return "Start";
+        case button::guide: return "Guide";
+        case button::left_stick: return "Left Stick";
+        case button::right_stick: return "Right Stick";
     }
     return "Unknown";
 }
+
+} // namespace xbox360_controller
 
 int main()
 {
@@ -76,13 +92,17 @@ int main()
         {
         case JS_EVENT_BUTTON:
         {
-            auto button = static_cast<xbox360_controller_button>(ev.number);
+            auto button = static_cast<xbox360_controller::button>(ev.number);
             const char* action = (ev.value ? "pressed" : "released");
             std::cout << boost::str(boost::format("[%1%] was %2%\n")
                     % to_string(button) % action);
         } break;
         case JS_EVENT_AXIS:
         {
+            unsigned axis = ev.number;
+            double value = ev.value / 32767.0;
+            std::cout << boost::str(boost::format("Axis %1%: %2%\n")
+                    % axis % value);
         } break;
         }
     }
