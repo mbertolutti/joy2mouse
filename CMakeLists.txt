@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_CXX_COMPILER clang++)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -Wextra -Weffc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -std=c++1y -Wall -Wextra -Weffc++")
 
 if("${CMAKE_BUILD_TYPE}" EQUAL "Debug")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -ggdb -DDEBUG")
