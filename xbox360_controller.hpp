@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "vec.hpp"
+
 namespace xbox360_controller {
 
 enum class button
@@ -34,6 +36,21 @@ enum class axis
 
 std::string to_string(button button);
 std::string to_string(axis axis);
+
+struct analog_state
+{
+    math::vec2f left_stick;
+    math::vec2f right_stick;
+    float left_trigger;
+    float right_trigger;
+};
+
+struct input_state
+{
+    analog_state uncorrected;
+    analog_state corrected;
+    math::vec2f dpad;
+};
 
 } // namespace xbox360_controller
 
