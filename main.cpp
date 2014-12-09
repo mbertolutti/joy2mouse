@@ -26,8 +26,8 @@ constexpr unsigned cursor_update_hz = 60;
 constexpr float cursor_speed = 25;
 constexpr float cursor_gamma = 5.0f;
 constexpr float cursor_accel_threshold = 0.25f;
-constexpr float cursor_reset_threshold = 0.15f;
-constexpr float max_cursor_accel = 2.0f;
+constexpr float cursor_reset_threshold = 0.2f;
+constexpr float max_cursor_accel = 2.5f;
 constexpr float cursor_accel_time = 1.0f;
 constexpr float cursor_accel_factor =
     cursor_accel_time * (max_cursor_accel - 1.0f) / cursor_update_hz;
@@ -255,8 +255,9 @@ int main()
     xbox360_controller::input_state controller_state = {};
 
     float cursor_accel = 0.0f;
+    math::vec2f cursor_accum = { 0.0f, 0.0f };
     float scroll_accel = 0.0f;
-    float scroll_pos = 0.0f;
+    float scroll_acum = 0.0f;
 
     for(;;)
     {
@@ -309,6 +310,7 @@ int main()
             if (left_magnitude)
             {
                 left_magnitude = std::pow(left_magnitude, cursor_gamma);
+                left_stick *= left_magnitude;
 
                 if (left_magnitude > cursor_accel_threshold)
                 {
@@ -320,9 +322,20 @@ int main()
                     cursor_accel = 1.0f;
                 }
 
-                int dx = cursor_accel * cursor_speed * left_stick[0];
-                int dy = cursor_accel * cursor_speed * left_stick[1];
-                XWarpPointer(dpy, None, None, 0, 0, 0, 0, dx, dy);
+                cursor_accum += cursor_accel * cursor_speed * left_stick;
+
+                if (std::abs(cursor_accum[0]) >= 1.0f ||
+                    std::abs(cursor_accum[1]) >= 1.0f)
+                {
+                    int dx = cursor_accum[0];
+                    int dy = cursor_accum[1];
+
+                    XWarpPointer(dpy, None, None, 0, 0, 0, 0, dx, dy);
+                    XSync(dpy, False);
+
+                    cursor_accum[0] -= dx;
+                    cursor_accum[1] -= dy;
+                }
             }
             else
             {
@@ -344,32 +357,30 @@ int main()
                     scroll_accel = 1.0f;
                 }
 
-                scroll_pos += scroll_accel * scroll_speed
+                scroll_acum += scroll_accel * scroll_speed
                     * right_stick[1] / cursor_update_hz;
 
                 // Scroll up
-                while (scroll_pos <= -1.0f)
+                while (scroll_acum <= -1.0f)
                 {
                     send_button_event(dpy, Button4, true);
                     send_button_event(dpy, Button4, false);
-                    scroll_pos += 1.0f;
+                    scroll_acum += 1.0f;
                 }
 
                 // Scroll down
-                while (scroll_pos >= 1.0f)
+                while (scroll_acum >= 1.0f)
                 {
                     send_button_event(dpy, Button5, true);
                     send_button_event(dpy, Button5, false);
-                    scroll_pos -= 1.0f;
+                    scroll_acum -= 1.0f;
                 }
             }
             else
             {
                 scroll_accel = 1.0f;
-                scroll_pos = 0.0f;
+                scroll_acum = 0.0f;
             }
-
-            XSync(dpy, False);
         }
     }
 
