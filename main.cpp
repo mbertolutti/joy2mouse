@@ -174,15 +174,13 @@ void handle_joystick_event(xbox360_controller::input_state& controller_state,
             // Back
             else if (updated_button == button::left_bumper)
             {
-                send_keyboard_event(dpy, XF86XK_Back, false);
-                send_keyboard_event(dpy, XF86XK_Back, true);
+                send_keyboard_event(dpy, XF86XK_Back, !pressed);
             }
 
             // Forward
             else if (updated_button == button::right_bumper)
             {
-                send_keyboard_event(dpy, XF86XK_Forward, false);
-                send_keyboard_event(dpy, XF86XK_Forward, true);
+                send_keyboard_event(dpy, XF86XK_Forward, !pressed);
             }
 
             const char* action = (pressed ? "pressed" : "released");
