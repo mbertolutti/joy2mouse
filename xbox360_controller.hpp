@@ -47,6 +47,8 @@ struct analog_state
 
 struct input_state
 {
+    void process_dead_zone();
+
     analog_state uncorrected;
     analog_state corrected;
     math::vec2f dpad;

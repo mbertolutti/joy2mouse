@@ -53,11 +53,11 @@ void apply_axis_input(xbox360_controller::input_state& controller_state,
             break;
 
         case axis::dpad_x:
-            controller_state.dpad[0] = value / 32767.0;
+            controller_state.dpad[0] = value / 32767.0f;
             break;
 
         case axis::dpad_y:
-            controller_state.dpad[1] = value / 32767.0;
+            controller_state.dpad[1] = value / 32767.0f;
             break;
     }
 }
