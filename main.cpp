@@ -23,19 +23,19 @@ const char* joystick_interface = "/dev/input/js0";
 
 constexpr unsigned cursor_update_hz = 60;
 
-constexpr float cursor_speed = 25;
-constexpr float cursor_gamma = 5.0f;
+constexpr float cursor_speed = 15;
+constexpr float cursor_gamma = 2.5f;
 constexpr float cursor_accel_threshold = 0.25f;
 constexpr float cursor_reset_threshold = 0.2f;
 constexpr float max_cursor_accel = 2.5f;
-constexpr float cursor_accel_time = 1.0f;
+constexpr float cursor_accel_time = 2.0f;
 constexpr float cursor_accel_factor =
     cursor_accel_time * (max_cursor_accel - 1.0f) / cursor_update_hz;
 
-constexpr float scroll_speed = 10;
+constexpr float scroll_speed = 7;
 constexpr float scroll_gamma = 3.0f;
 constexpr float scroll_accel_threshold = 0.25f;
-constexpr float scroll_reset_threshold = 0.15f;
+constexpr float scroll_reset_threshold = 0.2f;
 constexpr float max_scroll_accel = 4.0f;
 constexpr float scroll_accel_time = 2.0f;
 constexpr float scroll_accel_factor =
@@ -310,7 +310,7 @@ int main()
             if (left_magnitude)
             {
                 left_magnitude = std::pow(left_magnitude, cursor_gamma);
-                left_stick *= left_magnitude;
+                left_stick = left_stick.normalized() * left_magnitude;
 
                 if (left_magnitude > cursor_accel_threshold)
                 {
