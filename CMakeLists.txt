@@ -13,9 +13,15 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+find_package(X11 REQUIRED)
+
+include_directories(${X11_INCLUDE_DIR})
+
 set(CMAKE_joy2mouse_SRC
     main.cpp
     xbox360_controller.cpp
 )
 
 add_executable(joy2mouse ${CMAKE_joy2mouse_SRC})
+
+target_link_libraries(joy2mouse ${X11_LIBRARIES})
