@@ -52,6 +52,9 @@ struct input_state
     analog_state uncorrected;
     analog_state corrected;
     math::vec2f dpad;
+
+    bool left_stick_down;
+    bool right_stick_down;
 };
 
 } // namespace xbox360_controller
